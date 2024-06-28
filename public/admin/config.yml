@@ -1,4 +1,36 @@
-backend:
-  name: github
-  repo: owner-name/repo-name # Path to your GitHub repository
+backend: # Required
+  name: github # Required
+  repo: owner-name/repo-name # Path to your GitHub repository # Required
   branch: main # optional, defaults to master
+  commit_messages:
+    create: Create {{collection}} “{{slug}}”
+    update: Update {{collection}} “{{slug}}”
+    delete: Delete {{collection}} “{{slug}}”
+    uploadMedia: Upload “{{path}}”
+    deleteMedia: Delete “{{path}}”
+    openAuthoring: '{{message}}'
+
+#site_url: https://your-website-here.com
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+media_folder: "static/images/uploads" # Required
+media_library: # Required
+  name: uploadcare # default recommendation on Decap's website. See more options in their documentation.
+
+collections: # Required
+  - name: blog
+    label: Blog
+    extension: "markdown" # "json" is available
+    folder: content
+    media_folder: "static/images/uploads"
+    media_library:
+      name: blog_posts
+    create: true
+    fields:
+      - {name: title, widget: string, required: true}
+      - {name: slug, widget: string, pattern: ['^[a-z0-9-]+$', "Slug must only contain lowercase letters, numbers, and hyphens"], hint: "URL slugs look like this: how-to-write-a-blog", required: true}
+      - {name: description, widget: string, required: true}
+      - {name: date, widget: datetime, date_format: "MMMM D, YYYY", required: true}
+      - {name: body, widget: markdown, required: true}
